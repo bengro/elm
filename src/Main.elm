@@ -4,7 +4,7 @@ import Browser
 import Html exposing (Html, button, div, input, text)
 import Html.Attributes exposing (placeholder, style, type_, value)
 import Html.Events exposing (onClick, onInput)
-import String exposing (isEmpty, length)
+import String exposing (length)
 
 
 
