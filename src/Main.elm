@@ -2,8 +2,9 @@ module Main exposing (..)
 
 import Browser
 import Html exposing (Html, button, div, input, text)
-import Html.Attributes exposing (placeholder, type_, value)
+import Html.Attributes exposing (placeholder, style, type_, value)
 import Html.Events exposing (onClick, onInput)
+import String exposing (isEmpty, length)
 
 
 
@@ -51,10 +52,7 @@ type Msg
     | IncrementBy10
     | Reset
     | Change String
-
-
-type Form
-    = Name String
+    | Name String
     | Password String
     | PasswordAgain String
 
@@ -77,6 +75,15 @@ update msg model =
         Change string ->
             { model | content = string }
 
+        Name name ->
+            { model | form = { name = name, password = model.form.password, passwordAgain = model.form.passwordAgain } }
+
+        Password string ->
+            model
+
+        PasswordAgain string ->
+            model
+
 
 
 -- VIEW
@@ -96,6 +103,9 @@ view model =
                 , input [ placeholder "Text to reverse", value model.content, onInput Change ] []
                 , div [] [ text (String.reverse model.content) ]
                 , viewInput "text" "Name" model.form.name Name
+                , viewInput "text" "Password" model.form.password Password
+                , viewInput "text" "Password again" model.form.passwordAgain PasswordAgain
+                , viewValidation model
                 ]
 
         inputExample =
@@ -111,6 +121,15 @@ view model =
 viewInput : String -> String -> String -> (String -> msg) -> Html msg
 viewInput t p v m =
     input [ type_ t, placeholder p, value v, onInput m ] []
+
+
+viewValidation : Model -> Html msg
+viewValidation model =
+    if length model.form.name /= 0 then
+        div [ style "color" "green" ] [ text "OK" ]
+
+    else
+        div [ style "color" "red" ] [ text "Name must be filled." ]
 
 
 

@@ -5203,11 +5203,24 @@ var $author$project$Main$update = F2(
 				return _Utils_update(
 					model,
 					{counter: model.counter + 10});
-			default:
+			case 'Change':
 				var string = msg.a;
 				return _Utils_update(
 					model,
 					{content: string});
+			case 'Name':
+				var name = msg.a;
+				return _Utils_update(
+					model,
+					{
+						form: {name: name, password: model.form.password, passwordAgain: model.form.passwordAgain}
+					});
+			case 'Password':
+				var string = msg.a;
+				return model;
+			default:
+				var string = msg.a;
+				return model;
 		}
 	});
 var $author$project$Main$Change = function (a) {
@@ -5216,6 +5229,15 @@ var $author$project$Main$Change = function (a) {
 var $author$project$Main$Decrement = {$: 'Decrement'};
 var $author$project$Main$Increment = {$: 'Increment'};
 var $author$project$Main$IncrementBy10 = {$: 'IncrementBy10'};
+var $author$project$Main$Name = function (a) {
+	return {$: 'Name', a: a};
+};
+var $author$project$Main$Password = function (a) {
+	return {$: 'Password', a: a};
+};
+var $author$project$Main$PasswordAgain = function (a) {
+	return {$: 'PasswordAgain', a: a};
+};
 var $author$project$Main$Reset = {$: 'Reset'};
 var $elm$html$Html$button = _VirtualDom_node('button');
 var $elm$html$Html$div = _VirtualDom_node('div');
@@ -5283,6 +5305,44 @@ var $elm$core$String$reverse = _String_reverse;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $author$project$Main$viewInput = F4(
+	function (t, p, v, m) {
+		return A2(
+			$elm$html$Html$input,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$type_(t),
+					$elm$html$Html$Attributes$placeholder(p),
+					$elm$html$Html$Attributes$value(v),
+					$elm$html$Html$Events$onInput(m)
+				]),
+			_List_Nil);
+	});
+var $elm$core$Basics$neq = _Utils_notEqual;
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $author$project$Main$viewValidation = function (model) {
+	return (!(!$elm$core$String$length(model.form.name))) ? A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'color', 'green')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('OK')
+			])) : A2(
+		$elm$html$Html$div,
+		_List_fromArray(
+			[
+				A2($elm$html$Html$Attributes$style, 'color', 'red')
+			]),
+		_List_fromArray(
+			[
+				$elm$html$Html$text('Name must be filled.')
+			]));
+};
 var $author$project$Main$view = function (model) {
 	var inputExample = A2(
 		$elm$html$Html$div,
@@ -5360,7 +5420,11 @@ var $author$project$Main$view = function (model) {
 					[
 						$elm$html$Html$text(
 						$elm$core$String$reverse(model.content))
-					]))
+					])),
+				A4($author$project$Main$viewInput, 'text', 'Name', model.form.name, $author$project$Main$Name),
+				A4($author$project$Main$viewInput, 'text', 'Password', model.form.password, $author$project$Main$Password),
+				A4($author$project$Main$viewInput, 'text', 'Password again', model.form.passwordAgain, $author$project$Main$PasswordAgain),
+				$author$project$Main$viewValidation(model)
 			]));
 	return A2(
 		$elm$html$Html$div,
